@@ -1,3 +1,4 @@
+from ui import Ui_Dialog
 import json
 import os
 import shutil
@@ -8,11 +9,12 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtWidgets import QDialog, QApplication
 from random import randint
 
+DEBUG = 1  # set to get data from randint instead of real data from ADC ADS1115
+
 ConfigDirectory = os.path.join(os.getcwd(), "Configs")
 remoteConfigDirectory = "C:/configs"
 
 GAIN = 1  # 4.096V
-from ui import Ui_Dialog
 
 # PATH = "/home/pi/Desktop/Moduly/"
 PATH = "C:/"
@@ -46,17 +48,18 @@ class GetADCThread(QThread):
         self.running = True
         while self.running:
             QThread.msleep(100)
-            #QThread.sleep(2)
+            # QThread.sleep(2)
 
-            for i in range(0, 1):
-                adc = Adafruit_ADS1x15.ADS1115().read_adc(i, gain=1)
-                voltageMeasured[i] = adc / 65535 * 4.096 * adc_divider[i]
+            if DEBUG is 0:
+                for i in range(0, 1):
+                    adc = Adafruit_ADS1x15.ADS1115().read_adc(i, gain=1)
+                    voltageMeasured[i] = adc / 65535 * 4.096 * adc_divider[i]
+            else:
+                voltageMeasured[0] = randint(20, 28)
+                voltageMeasured[1] = randint(200, 400)
 
-            #voltageMeasured[0] = randint(20, 28)
-            #voltageMeasured[1] = randint(200,400)
             self.voltageSignal.emit(f'{format(voltageMeasured[0], ".2f")}')
             self.currentSignal.emit(f'{format(voltageMeasured[1], ".2f")}')
-
 
             #print(f'voltage0={voltageMeasured[0]}, voltage[1]={voltageMeasured[1]}')
             minCurrent = CurrentBase / 100 * (100 - CurrentTolerance)
@@ -138,7 +141,6 @@ class AppWindow(QDialog):
         self.getADCThread.pushButtonCurrent.connect(self.ui.pushButtonCurrent.setStyleSheet)
         self.getADCThread.pushButtonVoltage.connect(self.ui.pushButtonVoltage.setStyleSheet)
         self.getADCThread.pushButtonALL.connect(self.ui.pushButtonALL.setStyleSheet)
-
 
         self.ui.pushButtonALL.setStyleSheet("border-radius:50px; background-color: rgb(255,0,0);")
         # self.lalala()
