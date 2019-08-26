@@ -21,6 +21,9 @@ VoltageBase = 1
 VoltageTolerance = 0
 AdditionalInfo = ""
 
+greenCircle = "border-radius:25px; background-color: rgb(0,255,0);"
+redCricle = "border-radius:25px; background-color: rgb(255,0,0);"
+
 adc_divider = [1, 1]  # set this to calibrate according to dividers / shunts
 voltageMeasured = [0, 0]
 
@@ -61,21 +64,21 @@ class GetADCThread(QThread):
             minVoltage = VoltageBase / 100 * (100 - VoltageTolerance)
             maxVoltage = VoltageBase / 100 * (100 + VoltageTolerance)
 
-            if voltageMeasured[0] > minVoltage and voltageMeasured[0] < maxVoltage:
-                self.pushButtonVoltage.emit("border-radius:25px; background-color: rgb(0,255,0);")
+            if maxVoltage > voltageMeasured[0] > minVoltage:
+                self.pushButtonVoltage.emit(greenCircle)
                 isVoltageOK = True
             else:
-                self.pushButtonVoltage.emit("border-radius:25px; background-color: rgb(255,0,0);")
+                self.pushButtonVoltage.emit(redCricle)
                 isVoltageOK = False
 
-            if voltageMeasured[1] > minCurrent and voltageMeasured[1] < maxCurrent:
-                self.pushButtonCurrent.emit("border-radius:25px; background-color: rgb(0,255,0);")
+            if maxCurrent > voltageMeasured[1] > minCurrent:
+                self.pushButtonCurrent.emit(greenCircle)
                 isCurrentOK = True
             else:
-                self.pushButtonCurrent.emit("border-radius:25px; background-color: rgb(255,0,0);")
+                self.pushButtonCurrent.emit(redCricle)
                 isCurrentOK = False
 
-            if isCurrentOK is True and isVoltageOK is True:
+            if isCurrentOK and isVoltageOK is True:
                 self.pushButtonALL.emit("border-radius:50px; background-color: rgb(0,255,0);")
             else:
                 self.pushButtonALL.emit("border-radius:50px; background-color: rgb(255,0,0);")
