@@ -1,3 +1,5 @@
-# RPi-Production-Tester
+# RPi Production Tester
 
-![Screenshot](https://i.imgur.com/5pssmmp.png)
+A Raspberry Pi production tester of voltage and current based on ADS1115 ADC
+
+![Screenshot](https://i.imgur.com/aLzs6mS.png)
