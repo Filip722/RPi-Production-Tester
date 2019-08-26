@@ -83,11 +83,11 @@ class GetADCThread(QThread):
             else:
                 self.pushButtonALL.emit("border-radius:50px; background-color: rgb(255,0,0);")
 
-            VoltageDeviation = (1 - (voltageMeasured[0] / VoltageBase)) * 100
+            VoltageDeviation = -(1 - (voltageMeasured[0] / VoltageBase)) * 100
             VoltageDeviation = f'{format(VoltageDeviation, ".2f")}'
             self.DeviationVoltageLabel.emit(f'{VoltageDeviation}%')
 
-            CurrentDeviation = (1 - (voltageMeasured[1] / CurrentBase)) * 100
+            CurrentDeviation = -(1 - (voltageMeasured[1] / CurrentBase)) * 100
             CurrentDeviation = f'{format(CurrentDeviation, ".2f")}'
             self.DeviationCurrentLabel.emit(f'{CurrentDeviation}%')
 
